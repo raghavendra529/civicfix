@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | CivicFix Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+  <!-- Navbar -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center space-x-2">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+          <i class="fa-solid fa-road text-base"></i>
+        </div>
+        <span class="font-bold text-xl text-slate-900 tracking-tight">Civic<span class="text-blue-600">Fix</span></span>
+      </a>
+      <div id="auth-nav-container"></div>
+    </div>
+  </header>
+
+  <!-- Login Card Container -->
+  <main class="flex-1 flex items-center justify-center py-10 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-5">
+      
+      <div class="text-center space-y-1.5">
+        <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto text-xl shadow-sm">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Welcome to CivicFix</h1>
+        <p class="text-xs text-slate-500">Authenticate securely using Email OTP, Phone SMS (+65), or Password</p>
+      </div>
+
+      <!-- Main Login Box -->
+      <div class="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200 shadow-sm space-y-5">
+        
+        <!-- Tab Switcher (3 Tabs) -->
+        <div class="flex p-1 bg-slate-100 rounded-xl space-x-1">
+          <button id="tab-btn-email" onclick="switchLoginTab('email')" class="flex-1 py-2 text-[11px] sm:text-xs font-bold rounded-lg bg-white text-blue-600 shadow-sm transition-all flex items-center justify-center space-x-1">
+            <i class="fa-solid fa-envelope"></i>
+            <span>Email</span>
+          </button>
+          <button id="tab-btn-phone" onclick="switchLoginTab('phone')" class="flex-1 py-2 text-[11px] sm:text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center space-x-1">
+            <i class="fa-solid fa-mobile-screen"></i>
+            <span>Phone (+65)</span>
+          </button>
+          <button id="tab-btn-password" onclick="switchLoginTab('password')" class="flex-1 py-2 text-[11px] sm:text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center space-x-1">
+            <i class="fa-solid fa-key"></i>
+            <span>Password</span>
+          </button>
+        </div>
+
+        <!-- Tab 1: Passwordless Email OTP Login -->
+        <div id="pane-email" class="space-y-4">
+          
+          <!-- SMTP Status Banner -->
+          <div id="smtp-status-banner" class="p-2.5 rounded-xl text-xs flex items-center justify-between bg-slate-50 border border-slate-200">
+            <div class="flex items-center space-x-2 truncate">
+              <span id="smtp-status-dot" class="w-2.5 h-2.5 rounded-full bg-slate-400 flex-shrink-0"></span>
+              <span id="smtp-status-text" class="text-slate-600 font-medium truncate">Checking Gmail delivery status...</span>
+            </div>
+            <button type="button" onclick="openSmtpModal()" class="text-blue-600 hover:text-blue-800 text-[11px] font-bold flex items-center space-x-1 flex-shrink-0 ml-2">
+              <i class="fa-solid fa-gear"></i>
+              <span id="smtp-status-btn-label">Connect Gmail</span>
+            </button>
+          </div>
+
+          <!-- Step 1: Input Email -->
+          <div id="otp-step-email" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Your Registered Email</label>
+              <div class="relative">
+                <input type="email" id="otp-email-input" placeholder="e.g. citizen@example.com" value="raghavendrakammampati0305@gmail.com" class="w-full pl-9 pr-3 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium">
+                <i class="fa-regular fa-envelope absolute left-3 top-3 text-slate-400 text-sm"></i>
+              </div>
+            </div>
+            <button onclick="handleSendOtp()" id="btn-send-otp" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center space-x-1.5">
+              <i class="fa-solid fa-paper-plane"></i>
+              <span>Send Verification Code to Email</span>
+            </button>
+          </div>
+
+          <!-- Step 2: Input 6-Digit Email Code -->
+          <div id="otp-step-code" class="hidden space-y-4">
+            
+            <!-- When Delivered via Real Email -->
+            <div id="otp-box-delivered" class="bg-blue-50 border border-blue-200 p-3.5 rounded-xl text-xs text-blue-800 space-y-1.5">
+              <div class="flex items-center justify-between font-semibold">
+                <span class="flex items-center space-x-1.5">
+                  <i class="fa-regular fa-paper-plane text-blue-600"></i>
+                  <span>Verification code sent to:</span>
+                </span>
+                <button onclick="resetOtpStep()" class="text-blue-600 hover:underline text-[11px] font-bold">Change</button>
+              </div>
+              <p class="font-bold text-blue-900 truncate text-sm" id="otp-target-email"></p>
+              <p class="text-[11px] text-slate-500 pt-1 border-t border-blue-100 flex items-center space-x-1">
+                <i class="fa-solid fa-lock text-slate-400"></i>
+                <span>Protected Code: Delivered directly to your Gmail inbox. Check inbox and spam folder.</span>
+              </p>
+            </div>
+
+            <!-- When SMTP is Not Configured (Fallback Banner) -->
+            <div id="otp-box-fallback" class="hidden bg-amber-50 border border-amber-200 p-3.5 rounded-xl text-xs text-amber-900 space-y-2">
+              <div class="flex items-center justify-between font-semibold">
+                <span class="flex items-center space-x-1.5 text-amber-800">
+                  <i class="fa-solid fa-triangle-exclamation text-amber-600"></i>
+                  <span>Gmail Sender Not Connected in .env</span>
+                </span>
+                <button onclick="resetOtpStep()" class="text-amber-800 hover:underline text-[11px] font-bold">Change</button>
+              </div>
+              <p class="text-[11px] text-amber-700 leading-relaxed">
+                To send emails over the internet to <b id="otp-target-email-fallback"></b>, your 16-character Google App Password is required.
+              </p>
+              <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 pt-2 border-t border-amber-200/60">
+                <button type="button" onclick="openSmtpModal()" class="px-2.5 py-1.5 text-[11px] bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-sm flex items-center justify-center space-x-1">
+                  <i class="fa-solid fa-envelope"></i>
+                  <span>Connect Gmail App Password</span>
+                </button>
+                <button type="button" onclick="autofillDevOtp()" class="px-2.5 py-1.5 text-[11px] bg-amber-200 hover:bg-amber-300 text-amber-900 font-bold rounded-lg flex items-center justify-center space-x-1">
+                  <span>Use Dev Code: <b id="dev-otp-code-display" class="font-mono ml-1"></b></span>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Enter 6-Digit Verification Code</label>
+              <input type="text" maxlength="6" id="otp-code-input" placeholder="••••••" class="w-full tracking-widest text-center py-2.5 text-lg font-bold border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono">
+            </div>
+
+            <button onclick="handleVerifyOtp()" id="btn-verify-otp" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center space-x-1.5">
+              <i class="fa-solid fa-check"></i>
+              <span>Verify Code & Log In</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab 2: Phone SMS OTP Login (+65 Singapore, etc.) -->
+        <div id="pane-phone" class="hidden space-y-4">
+          <!-- Step 1: Input Phone -->
+          <div id="phone-step-input" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Mobile Phone Number</label>
+              <div class="flex space-x-2">
+                <select id="phone-country-code" class="w-32 px-2.5 py-2.5 text-xs font-bold border border-slate-200 rounded-lg bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <option value="+65" selected>🇸🇬 +65 (Singapore)</option>
+                  <option value="+91">🇮🇳 +91 (India)</option>
+                  <option value="+1">🇺🇸 +1 (USA/Canada)</option>
+                  <option value="+44">🇬🇧 +44 (UK)</option>
+                  <option value="+61">🇦🇺 +61 (Australia)</option>
+                  <option value="+971">🇦🇪 +971 (UAE)</option>
+                  <option value="+60">🇲🇾 +60 (Malaysia)</option>
+                  <option value="+81">🇯🇵 +81 (Japan)</option>
+                  <option value="+49">🇩🇪 +49 (Germany)</option>
+                </select>
+                <div class="relative flex-1">
+                  <input type="tel" id="phone-number-input" placeholder="9123 4567" value="91234567" class="w-full pl-8 pr-3 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                  <i class="fa-solid fa-phone absolute left-3 top-3 text-slate-400 text-xs"></i>
+                </div>
+              </div>
+            </div>
+            <button onclick="handleSendPhoneOtp()" id="btn-send-phone-otp" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center space-x-1.5">
+              <i class="fa-solid fa-comment-sms"></i>
+              <span>Send SMS Verification Code</span>
+            </button>
+          </div>
+
+          <!-- Step 2: Input 6-Digit SMS Code -->
+          <div id="phone-step-code" class="hidden space-y-4">
+            <div id="sms-box-delivered" class="bg-blue-50 border border-blue-200 p-3.5 rounded-xl text-xs text-blue-800 space-y-1.5">
+              <div class="flex items-center justify-between font-semibold">
+                <span class="flex items-center space-x-1.5">
+                  <i class="fa-solid fa-mobile-screen text-blue-600"></i>
+                  <span>SMS Dispatched to:</span>
+                </span>
+                <button onclick="resetPhoneStep()" class="text-blue-600 hover:underline text-[11px] font-bold">Change</button>
+              </div>
+              <p class="font-bold text-blue-900 truncate text-sm" id="sms-target-phone"></p>
+              <p class="text-[11px] text-slate-500 pt-1 border-t border-blue-100 flex items-center space-x-1">
+                <i class="fa-solid fa-lock text-slate-400"></i>
+                <span>Protected Code: Check your mobile phone SMS for the 6-digit passcode.</span>
+              </p>
+            </div>
+
+            <div id="sms-box-fallback" class="hidden bg-amber-50 border border-amber-200 p-3.5 rounded-xl text-xs text-amber-900 space-y-2">
+              <div class="flex items-center justify-between font-semibold">
+                <span class="flex items-center space-x-1.5 text-amber-800">
+                  <i class="fa-solid fa-comment-sms text-amber-600"></i>
+                  <span>Twilio SMS Gateway Not Connected</span>
+                </span>
+                <button onclick="resetPhoneStep()" class="text-amber-800 hover:underline text-[11px] font-bold">Change</button>
+              </div>
+              <p class="text-[11px] text-amber-700">
+                To dispatch live mobile carrier SMS, configure TWILIO_* credentials in .env.
+              </p>
+              <div class="pt-1 border-t border-amber-200/60">
+                <button type="button" onclick="autofillPhoneDevOtp()" class="w-full py-1.5 text-[11px] bg-amber-200 hover:bg-amber-300 text-amber-900 font-bold rounded-lg flex items-center justify-center space-x-1">
+                  <span>Click to Auto-fill Dev SMS Code: <b id="dev-phone-otp-display" class="font-mono ml-1"></b></span>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Enter 6-Digit SMS Code</label>
+              <input type="text" maxlength="6" id="phone-otp-input" placeholder="••••••" class="w-full tracking-widest text-center py-2.5 text-lg font-bold border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono">
+            </div>
+
+            <button onclick="handleVerifyPhoneOtp()" id="btn-verify-phone-otp" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center space-x-1.5">
+              <i class="fa-solid fa-check"></i>
+              <span>Verify SMS Code & Log In</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Tab 3: Password Login -->
+        <div id="pane-password" class="hidden space-y-4">
+          <form onsubmit="handlePasswordLogin(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
+              <input type="email" id="pwd-email" placeholder="name@example.com" value="akhilesh@example.com" required class="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+              <input type="password" id="pwd-password" placeholder="••••••••" value="CivicFix2026!" required class="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <button type="submit" id="btn-pwd-login" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center space-x-1.5">
+              <i class="fa-solid fa-right-to-bracket"></i>
+              <span>Log In with Password</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Demo Quick-Fill Credentials -->
+        <div class="pt-4 border-t border-slate-100 space-y-2">
+          <span class="text-[11px] uppercase tracking-wider text-slate-400 font-bold block text-center">Quick Demo Accounts</span>
+          <div class="grid grid-cols-3 gap-1.5">
+            <button type="button" onclick="fillDemoPhone()" class="px-2 py-1.5 text-[10px] sm:text-[11px] font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors truncate">
+              🇸🇬 +65 Phone
+            </button>
+            <button type="button" onclick="fillDemoCitizen()" class="px-2 py-1.5 text-[10px] sm:text-[11px] font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors truncate">
+              Citizen (Akhilesh)
+            </button>
+            <button type="button" onclick="fillDemoAdmin()" class="px-2 py-1.5 text-[10px] sm:text-[11px] font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition-colors truncate">
+              Municipal Admin
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <p class="text-center text-xs text-slate-500">
+        Don't have an account yet? 
+        <a href="/register.html" class="font-bold text-blue-600 hover:underline">Register Citizen Account</a>
+      </p>
+
+    </div>
+  </main>
+
+  <!-- Modal: Configure Gmail SMTP -->
+  <div id="modal-configure-smtp" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm font-bold">
+            <i class="fa-solid fa-envelope"></i>
+          </div>
+          <h3 class="font-extrabold text-slate-900 text-base">Connect Gmail Sender (Live Email Delivery)</h3>
+        </div>
+        <button onclick="closeSmtpModal()" class="text-slate-400 hover:text-slate-600 text-base">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-600 leading-relaxed">
+        To deliver live 6-digit verification codes to actual inboxes (Gmail, Outlook, Yahoo), connect your Gmail account via Google's secure SMTP (TLS port 587):
+      </p>
+
+      <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl text-[11px] text-slate-700 space-y-1.5">
+        <div class="font-bold text-slate-800">Quick 30-Second Setup:</div>
+        <ol class="list-decimal pl-4 space-y-1 text-slate-600">
+          <li>Ensure 2-Step Verification is ON in your Google Account.</li>
+          <li>Open <a href="https://myaccount.google.com/apppasswords" target="_blank" class="text-blue-600 font-bold underline">https://myaccount.google.com/apppasswords</a></li>
+          <li>Name it <b>CivicFix</b>, click Generate, and copy the 16-character password.</li>
+        </ol>
+      </div>
+
+      <form onsubmit="handleConfigureSmtpSubmit(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Your Gmail Address</label>
+          <input type="email" id="smtp-email-input" placeholder="e.g. yourname@gmail.com" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">16-Character Google App Password</label>
+          <input type="password" id="smtp-pwd-input" placeholder="abcd efgh ijkl mnop" required class="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono">
+          <p class="text-[10px] text-slate-400 mt-1">Spaces are ignored automatically. Never shared outside your local server.</p>
+        </div>
+
+        <div id="smtp-error-box" class="hidden p-2.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs"></div>
+
+        <div class="flex items-center justify-end space-x-2 pt-2">
+          <button type="button" onclick="closeSmtpModal()" class="px-3 py-2 text-xs font-bold rounded-lg text-slate-600 hover:bg-slate-100 transition-colors">
+            Cancel
+          </button>
+          <button type="submit" id="btn-save-smtp" class="px-4 py-2 text-xs font-bold rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-md transition-all flex items-center space-x-1.5">
+            <i class="fa-solid fa-plug"></i>
+            <span>Verify & Save Connection</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script>
+    let _smtpConfigured = false;
+    let _lastDevOtp = "";
+    let _lastPhoneDevOtp = "";
+
+    async function checkSmtpStatus() {
+      try {
+        const status = await getSmtpStatus();
+        const dot = document.getElementById("smtp-status-dot");
+        const text = document.getElementById("smtp-status-text");
+        const btnLabel = document.getElementById("smtp-status-btn-label");
+
+        if (status.configured) {
+          _smtpConfigured = true;
+          dot.className = "w-2.5 h-2.5 rounded-full bg-emerald-500 flex-shrink-0";
+          text.innerHTML = `Live Gmail Active: <b class="text-emerald-700">${status.sender_email}</b>`;
+          btnLabel.innerText = "Change";
+          document.getElementById("smtp-email-input").value = status.sender_email;
+        } else {
+          _smtpConfigured = false;
+          dot.className = "w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse flex-shrink-0";
+          text.innerHTML = `Live Email Delivery Offline (App Password needed)`;
+          btnLabel.innerText = "Connect Gmail";
+        }
+      } catch (e) {
+        console.error("Failed to check SMTP status", e);
+      }
+    }
+
+    function openSmtpModal() {
+      const currentEmail = document.getElementById("otp-email-input").value.trim();
+      if (currentEmail && currentEmail.includes("@gmail.com")) {
+        document.getElementById("smtp-email-input").value = currentEmail;
+      }
+      document.getElementById("smtp-error-box").classList.add("hidden");
+      document.getElementById("modal-configure-smtp").classList.remove("hidden");
+    }
+
+    function closeSmtpModal() {
+      document.getElementById("modal-configure-smtp").classList.add("hidden");
+    }
+
+    async function handleConfigureSmtpSubmit(event) {
+      event.preventDefault();
+      const email = document.getElementById("smtp-email-input").value.trim();
+      const appPwd = document.getElementById("smtp-pwd-input").value.trim();
+      const btn = document.getElementById("btn-save-smtp");
+      const errBox = document.getElementById("smtp-error-box");
+      errBox.classList.add("hidden");
+
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i><span>Testing Google SMTP...</span>`;
+
+      try {
+        const res = await configureSmtp(email, appPwd);
+        showToast(res.message, "success");
+        closeSmtpModal();
+        await checkSmtpStatus();
+        document.getElementById("otp-email-input").value = email;
+      } catch (err) {
+        errBox.innerText = err.message;
+        errBox.classList.remove("hidden");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-plug"></i><span>Verify & Save Connection</span>`;
+      }
+    }
+
+    function switchLoginTab(tab) {
+      const tabs = ["email", "phone", "password"];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-btn-${t}`);
+        const pane = document.getElementById(`pane-${t}`);
+        if (t === tab) {
+          btn.className = "flex-1 py-2 text-[11px] sm:text-xs font-bold rounded-lg bg-white text-blue-600 shadow-sm transition-all flex items-center justify-center space-x-1";
+          pane.classList.remove("hidden");
+        } else {
+          btn.className = "flex-1 py-2 text-[11px] sm:text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center justify-center space-x-1";
+          pane.classList.add("hidden");
+        }
+      });
+    }
+
+    // --- Email OTP Handlers ---
+    async function handleSendOtp() {
+      const email = document.getElementById("otp-email-input").value.trim();
+      if (!email || !email.includes("@")) {
+        showToast("Please enter a valid email address", "warning");
+        return;
+      }
+      const btn = document.getElementById("btn-send-otp");
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i><span>Sending Code...</span>`;
+
+      try {
+        const res = await sendEmailOtp(email);
+        document.getElementById("otp-target-email").innerText = email;
+        document.getElementById("otp-target-email-fallback").innerText = email;
+        document.getElementById("otp-step-email").classList.add("hidden");
+        document.getElementById("otp-step-code").classList.remove("hidden");
+        document.getElementById("otp-code-input").value = "";
+        document.getElementById("otp-code-input").focus();
+
+        if (res.delivered) {
+          document.getElementById("otp-box-delivered").classList.remove("hidden");
+          document.getElementById("otp-box-fallback").classList.add("hidden");
+          showToast(`Verification code sent to ${email}! Check your inbox.`, "success");
+        } else {
+          document.getElementById("otp-box-delivered").classList.add("hidden");
+          document.getElementById("otp-box-fallback").classList.remove("hidden");
+          _lastDevOtp = res.dev_otp || "";
+          document.getElementById("dev-otp-code-display").innerText = _lastDevOtp;
+          showToast("Live email offline: Use dev code or connect Gmail.", "warning");
+        }
+      } catch (err) {
+        showToast(err.message, "danger");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-paper-plane"></i><span>Send Verification Code to Email</span>`;
+      }
+    }
+
+    function autofillDevOtp() {
+      if (_lastDevOtp) {
+        document.getElementById("otp-code-input").value = _lastDevOtp;
+        showToast("Dev verification code filled!", "info");
+        document.getElementById("otp-code-input").focus();
+      }
+    }
+
+    function resetOtpStep() {
+      document.getElementById("otp-step-code").classList.add("hidden");
+      document.getElementById("otp-step-email").classList.remove("hidden");
+    }
+
+    async function handleVerifyOtp() {
+      const email = document.getElementById("otp-target-email").innerText.trim();
+      const code = document.getElementById("otp-code-input").value.trim();
+
+      if (!code || code.length < 6) {
+        showToast("Please enter the 6-digit verification code", "warning");
+        return;
+      }
+
+      const btn = document.getElementById("btn-verify-otp");
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i><span>Verifying...</span>`;
+
+      try {
+        const res = await verifyEmailOtp(email, code);
+        showToast(`Welcome back, ${res.user.name}!`, "success");
+        setTimeout(() => {
+          if (res.user.role === "admin") {
+            window.location.href = "/admin.html";
+          } else {
+            window.location.href = "/report.html";
+          }
+        }, 800);
+      } catch (err) {
+        showToast(err.message, "danger");
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-check"></i><span>Verify Code & Log In</span>`;
+      }
+    }
+
+    // --- Phone SMS OTP Handlers (+65 Singapore) ---
+    async function handleSendPhoneOtp() {
+      const countryCode = document.getElementById("phone-country-code").value;
+      const phoneNumber = document.getElementById("phone-number-input").value.trim();
+
+      if (!phoneNumber) {
+        showToast("Please enter your mobile phone number", "warning");
+        return;
+      }
+
+      const btn = document.getElementById("btn-send-phone-otp");
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i><span>Dispatching SMS...</span>`;
+
+      try {
+        const res = await sendPhoneOtp(countryCode, phoneNumber);
+        document.getElementById("sms-target-phone").innerText = res.phone;
+        document.getElementById("phone-step-input").classList.add("hidden");
+        document.getElementById("phone-step-code").classList.remove("hidden");
+        document.getElementById("phone-otp-input").value = "";
+        document.getElementById("phone-otp-input").focus();
+
+        if (res.delivered) {
+          document.getElementById("sms-box-delivered").classList.remove("hidden");
+          document.getElementById("sms-box-fallback").classList.add("hidden");
+          showToast(`SMS OTP sent to ${res.phone}!`, "success");
+        } else {
+          document.getElementById("sms-box-delivered").classList.add("hidden");
+          document.getElementById("sms-box-fallback").classList.remove("hidden");
+          _lastPhoneDevOtp = res.dev_otp || "";
+          document.getElementById("dev-phone-otp-display").innerText = _lastPhoneDevOtp;
+          showToast("Live SMS offline: Use dev code below.", "warning");
+        }
+      } catch (err) {
+        showToast(err.message, "danger");
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-comment-sms"></i><span>Send SMS Verification Code</span>`;
+      }
+    }
+
+    function autofillPhoneDevOtp() {
+      if (_lastPhoneDevOtp) {
+        document.getElementById("phone-otp-input").value = _lastPhoneDevOtp;
+        showToast("Dev SMS code filled!", "info");
+        document.getElementById("phone-otp-input").focus();
+      }
+    }
+
+    function resetPhoneStep() {
+      document.getElementById("phone-step-code").classList.add("hidden");
+      document.getElementById("phone-step-input").classList.remove("hidden");
+    }
+
+    async function handleVerifyPhoneOtp() {
+      const countryCode = document.getElementById("phone-country-code").value;
+      const phoneNumber = document.getElementById("phone-number-input").value.trim();
+      const code = document.getElementById("phone-otp-input").value.trim();
+
+      if (!code || code.length < 6) {
+        showToast("Please enter the 6-digit SMS code", "warning");
+        return;
+      }
+
+      const btn = document.getElementById("btn-verify-phone-otp");
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i><span>Verifying...</span>`;
+
+      try {
+        const res = await verifyPhoneOtp(countryCode, phoneNumber, code);
+        showToast(`Welcome back, ${res.user.name}!`, "success");
+        setTimeout(() => {
+          if (res.user.role === "admin") {
+            window.location.href = "/admin.html";
+          } else {
+            window.location.href = "/report.html";
+          }
+        }, 800);
+      } catch (err) {
+        showToast(err.message, "danger");
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-check"></i><span>Verify SMS Code & Log In</span>`;
+      }
+    }
+
+    // --- Password Login Handler ---
+    async function handlePasswordLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById("pwd-email").value.trim();
+      const password = document.getElementById("pwd-password").value;
+
+      const btn = document.getElementById("btn-pwd-login");
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i><span>Logging In...</span>`;
+
+      try {
+        const res = await loginWithPassword(email, password);
+        showToast(`Welcome back, ${res.user.name}!`, "success");
+        setTimeout(() => {
+          if (res.user.role === "admin") {
+            window.location.href = "/admin.html";
+          } else {
+            window.location.href = "/report.html";
+          }
+        }, 800);
+      } catch (err) {
+        showToast(err.message, "danger");
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-right-to-bracket"></i><span>Log In with Password</span>`;
+      }
+    }
+
+    // --- Quick Demo Fills ---
+    function fillDemoPhone() {
+      switchLoginTab('phone');
+      document.getElementById("phone-country-code").value = "+65";
+      document.getElementById("phone-number-input").value = "91234567";
+      showToast("Loaded Singapore (+65 9123 4567) demo number", "success");
+    }
+
+    function fillDemoCitizen() {
+      switchLoginTab('password');
+      document.getElementById("pwd-email").value = "akhilesh@example.com";
+      document.getElementById("pwd-password").value = "CivicFix2026!";
+      showToast("Loaded Citizen (Akhilesh) credentials", "success");
+    }
+
+    function fillDemoAdmin() {
+      switchLoginTab('password');
+      document.getElementById("pwd-email").value = "admin@civicfix.gov";
+      document.getElementById("pwd-password").value = "AdminPass2026!";
+      showToast("Loaded Municipal Admin credentials", "success");
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      checkSmtpStatus();
+    });
+  </script>
+</body>
+</html>

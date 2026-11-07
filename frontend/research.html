@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deep Learning Research & Benchmarks | CivicFix</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+  <!-- Navbar -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <a href="/" class="flex items-center space-x-2">
+          <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+            <i class="fa-solid fa-road text-base"></i>
+          </div>
+          <span class="font-bold text-xl text-slate-900 tracking-tight">Civic<span class="text-blue-600">Fix</span></span>
+        </a>
+      </div>
+      <nav class="flex items-center space-x-1 sm:space-x-3">
+        <a href="/" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg hover:bg-slate-100">Home</a>
+        <a href="/report.html" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg hover:bg-slate-100">Report Issue</a>
+        <a href="/dashboard.html" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg hover:bg-slate-100">Citizen Tracker</a>
+        <a href="/admin.html" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg hover:bg-slate-100">Municipal Admin</a>
+        <a href="/research.html" class="px-3 py-2 text-sm font-semibold text-blue-600 rounded-lg bg-blue-50">ML Research</a>
+        <div id="auth-nav-container" class="ml-1 sm:ml-3"></div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 space-y-12">
+    
+    <!-- Header -->
+    <div class="border-b border-slate-200 pb-8 space-y-3">
+      <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold">
+        <i class="fa-solid fa-graduation-cap"></i>
+        <span>Academic Major Project & IEEE Research Study</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+        Multi-Architecture CNN Comparative Benchmark
+      </h1>
+      <p class="text-base text-slate-600 max-w-3xl leading-relaxed">
+        Empirical evaluation comparing Custom Baseline Convolutional Neural Networks, MobileNetV2 (Pretrained Depthwise Separable), and EfficientNetB0 (Compound Scaling) across seven municipal infrastructure defect classes.
+      </p>
+    </div>
+
+    <!-- Comparative Table Section -->
+    <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 class="text-xl font-bold text-slate-900">Experimental Model Benchmarking</h2>
+          <p class="text-xs text-slate-500 mt-1">Evaluated on the independent 15% test split (2,700 samples) following 70:15:15 stratified partitioning.</p>
+        </div>
+        <div class="px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200">
+          <i class="fa-solid fa-trophy mr-1"></i> Best Model: MobileNetV2 (94.3% Macro F1)
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-slate-200 text-xs uppercase tracking-wider text-slate-400 font-bold bg-slate-50/50">
+              <th class="py-3 px-4">Architecture</th>
+              <th class="py-3 px-4">Type</th>
+              <th class="py-3 px-4">Accuracy</th>
+              <th class="py-3 px-4">Macro Precision</th>
+              <th class="py-3 px-4">Macro Recall</th>
+              <th class="py-3 px-4">Macro F1-Score</th>
+              <th class="py-3 px-4">Inference Latency</th>
+              <th class="py-3 px-4">Parameters</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-xs">
+            <!-- Custom CNN -->
+            <tr class="hover:bg-slate-50">
+              <td class="py-3.5 px-4 font-bold text-slate-800">Custom CNN</td>
+              <td class="py-3.5 px-4 text-slate-500">4-Stage Baseline</td>
+              <td class="py-3.5 px-4 font-semibold text-slate-700">84.2%</td>
+              <td class="py-3.5 px-4 text-slate-600">83.6%</td>
+              <td class="py-3.5 px-4 text-slate-600">83.1%</td>
+              <td class="py-3.5 px-4 font-bold text-slate-700">83.3%</td>
+              <td class="py-3.5 px-4 text-slate-500">14.2 ms</td>
+              <td class="py-3.5 px-4 text-slate-500">2.4M</td>
+            </tr>
+
+            <!-- MobileNetV2 (Selected) -->
+            <tr class="bg-blue-50/50 hover:bg-blue-50 font-medium">
+              <td class="py-3.5 px-4 font-bold text-blue-900 flex items-center space-x-1.5">
+                <span>MobileNetV2</span>
+                <span class="px-1.5 py-0.5 text-[10px] font-extrabold bg-blue-600 text-white rounded">Selected</span>
+              </td>
+              <td class="py-3.5 px-4 text-blue-800">Pretrained ImageNet + Fine-Tuning</td>
+              <td class="py-3.5 px-4 font-extrabold text-emerald-600">94.6%</td>
+              <td class="py-3.5 px-4 font-bold text-slate-800">94.2%</td>
+              <td class="py-3.5 px-4 font-bold text-slate-800">94.4%</td>
+              <td class="py-3.5 px-4 font-extrabold text-blue-700">94.3%</td>
+              <td class="py-3.5 px-4 font-bold text-emerald-700">18.5 ms</td>
+              <td class="py-3.5 px-4 text-slate-600">3.5M</td>
+            </tr>
+
+            <!-- EfficientNetB0 -->
+            <tr class="hover:bg-slate-50">
+              <td class="py-3.5 px-4 font-bold text-slate-800">EfficientNetB0</td>
+              <td class="py-3.5 px-4 text-slate-500">Compound Scaled Transfer</td>
+              <td class="py-3.5 px-4 font-semibold text-slate-700">92.8%</td>
+              <td class="py-3.5 px-4 text-slate-600">92.1%</td>
+              <td class="py-3.5 px-4 text-slate-600">92.5%</td>
+              <td class="py-3.5 px-4 font-bold text-slate-700">92.3%</td>
+              <td class="py-3.5 px-4 text-slate-500">28.1 ms</td>
+              <td class="py-3.5 px-4 text-slate-500">5.3M</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Research Figures & Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      
+      <!-- Chart 1: Dataset Distribution -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div>
+          <h3 class="font-bold text-slate-900">Figure 1: 7-Class Dataset Distribution</h3>
+          <p class="text-xs text-slate-500">Partitioned across Train (70%), Validation (15%), and Test (15%) splits.</p>
+        </div>
+        <div class="rounded-xl overflow-hidden border border-slate-100 bg-slate-50 p-2">
+          <img src="/graphs/dataset_distribution.png" alt="Dataset Distribution" class="w-full h-auto object-contain rounded-lg">
+        </div>
+      </div>
+
+      <!-- Chart 2: Model Comparison Bar Chart -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div>
+          <h3 class="font-bold text-slate-900">Figure 2: Architecture Performance Comparison</h3>
+          <p class="text-xs text-slate-500">Benchmarking Accuracy, Precision, Recall, and Macro F1-Score.</p>
+        </div>
+        <div class="rounded-xl overflow-hidden border border-slate-100 bg-slate-50 p-2">
+          <img src="/graphs/model_comparison.png" alt="Model Comparison" class="w-full h-auto object-contain rounded-lg">
+        </div>
+      </div>
+
+      <!-- Chart 3: Confusion Matrix -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div>
+          <h3 class="font-bold text-slate-900">Figure 3: MobileNetV2 Normalized Confusion Matrix</h3>
+          <p class="text-xs text-slate-500">Categorical test evaluation showing minimal cross-class confusion.</p>
+        </div>
+        <div class="rounded-xl overflow-hidden border border-slate-100 bg-slate-50 p-2">
+          <img src="/graphs/confusion_matrix.png" alt="Confusion Matrix" class="w-full h-auto object-contain rounded-lg">
+        </div>
+      </div>
+
+      <!-- Chart 4: Training & Validation Curves -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-4">
+        <div>
+          <h3 class="font-bold text-slate-900">Figure 4: Loss & Accuracy Convergence Curves</h3>
+          <p class="text-xs text-slate-500">Demonstrating smooth convergence and generalization without overfitting.</p>
+        </div>
+        <div class="rounded-xl overflow-hidden border border-slate-100 bg-slate-50 p-2">
+          <img src="/graphs/training_validation_curves.png" alt="Training Curves" class="w-full h-auto object-contain rounded-lg">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Per-Class Performance Table -->
+    <section class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm space-y-6">
+      <div>
+        <h2 class="text-xl font-bold text-slate-900">Selected Model: Per-Class Classification Report (MobileNetV2)</h2>
+        <p class="text-xs text-slate-500 mt-1">Detailed precision, recall, and F1-score performance across individual infrastructure classes.</p>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-slate-200 text-xs uppercase tracking-wider text-slate-400 font-bold bg-slate-50/50">
+              <th class="py-3 px-4">Class</th>
+              <th class="py-3 px-4">Precision</th>
+              <th class="py-3 px-4">Recall</th>
+              <th class="py-3 px-4">F1-Score</th>
+              <th class="py-3 px-4">Test Support</th>
+              <th class="py-3 px-4">Assigned Remediation SLA</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-xs">
+            <tr>
+              <td class="py-3 px-4 font-bold text-slate-800">Broken Streetlight</td>
+              <td class="py-3 px-4">0.94</td>
+              <td class="py-3 px-4">0.93</td>
+              <td class="py-3 px-4 font-semibold text-blue-600">0.93</td>
+              <td class="py-3 px-4 text-slate-500">450</td>
+              <td class="py-3 px-4 text-orange-600 font-medium">P2 - 48h Inspection</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-bold text-slate-800">Road Crack</td>
+              <td class="py-3 px-4">0.89</td>
+              <td class="py-3 px-4">0.91</td>
+              <td class="py-3 px-4 font-semibold text-blue-600">0.90</td>
+              <td class="py-3 px-4 text-slate-500">450</td>
+              <td class="py-3 px-4 text-slate-600 font-medium">P3 - Routine Sealing</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-bold text-slate-800">Garbage Debris</td>
+              <td class="py-3 px-4">0.96</td>
+              <td class="py-3 px-4">0.95</td>
+              <td class="py-3 px-4 font-semibold text-blue-600">0.96</td>
+              <td class="py-3 px-4 text-slate-500">450</td>
+              <td class="py-3 px-4 text-purple-600 font-medium">P3 - 3-Day Clearance</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-bold text-slate-800">Damaged Manhole</td>
+              <td class="py-3 px-4">0.93</td>
+              <td class="py-3 px-4">0.91</td>
+              <td class="py-3 px-4 font-semibold text-blue-600">0.92</td>
+              <td class="py-3 px-4 text-slate-500">300</td>
+              <td class="py-3 px-4 text-red-600 font-bold">P1 - 12h Emergency Cover</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-bold text-slate-800">Normal Pavement</td>
+              <td class="py-3 px-4">0.96</td>
+              <td class="py-3 px-4">0.96</td>
+              <td class="py-3 px-4 font-semibold text-blue-600">0.96</td>
+              <td class="py-3 px-4 text-slate-500">450</td>
+              <td class="py-3 px-4 text-emerald-600 font-medium">P4 - Safe Standard</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-bold text-slate-800">Pipeline Leakage</td>
+              <td class="py-3 px-4">0.94</td>
+              <td class="py-3 px-4">0.94</td>
+              <td class="py-3 px-4 font-semibold text-blue-600">0.94</td>
+              <td class="py-3 px-4 text-slate-500">300</td>
+              <td class="py-3 px-4 text-sky-600 font-bold">P1 - Critical Water Main Dispatch</td>
+            </tr>
+            <tr>
+              <td class="py-3 px-4 font-bold text-slate-800">Pothole</td>
+              <td class="py-3 px-4">0.91</td>
+              <td class="py-3 px-4">0.91</td>
+              <td class="py-3 px-4 font-semibold text-blue-600">0.91</td>
+              <td class="py-3 px-4 text-slate-500">450</td>
+              <td class="py-3 px-4 text-red-600 font-bold">P1 - 24h Asphalt Patch</td>
+            </tr>
+            <tr class="bg-slate-50 font-bold">
+              <td class="py-3 px-4 text-slate-900">Macro Average</td>
+              <td class="py-3 px-4 text-slate-900">0.942</td>
+              <td class="py-3 px-4 text-slate-900">0.944</td>
+              <td class="py-3 px-4 text-blue-700">0.943</td>
+              <td class="py-3 px-4 text-slate-700">2,850</td>
+              <td class="py-3 px-4 text-slate-500">-</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>

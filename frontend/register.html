@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | CivicFix Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+  <!-- Navbar -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center space-x-2">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+          <i class="fa-solid fa-road text-base"></i>
+        </div>
+        <span class="font-bold text-xl text-slate-900 tracking-tight">Civic<span class="text-blue-600">Fix</span></span>
+      </a>
+      <div id="auth-nav-container"></div>
+    </div>
+  </header>
+
+  <!-- Register Card Container -->
+  <main class="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-6">
+      
+      <div class="text-center space-y-2">
+        <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto text-xl shadow-sm">
+          <i class="fa-solid fa-user-plus"></i>
+        </div>
+        <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Create an Account</h1>
+        <p class="text-xs text-slate-500">Join the civic infrastructure crowdsourcing network</p>
+      </div>
+
+      <!-- Main Box -->
+      <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+        <form onsubmit="handleRegister(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Full Legal Name</label>
+            <input type="text" id="reg-name" placeholder="e.g. Akhilesh Kamma" required class="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
+            <input type="email" id="reg-email" placeholder="name@example.com" required class="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+            <input type="password" id="reg-password" placeholder="At least 6 characters" minlength="6" required class="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Account Role</label>
+            <select id="reg-role" class="w-full px-3.5 py-2.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+              <option value="citizen">Citizen Reporter</option>
+              <option value="admin">Municipal Public Works Officer</option>
+            </select>
+          </div>
+
+          <button type="submit" id="btn-register" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center space-x-1.5">
+            <i class="fa-solid fa-user-check"></i>
+            <span>Register Account</span>
+          </button>
+        </form>
+      </div>
+
+      <p class="text-center text-xs text-slate-500">
+        Already have an account? 
+        <a href="/login.html" class="font-bold text-blue-600 hover:underline">Log In</a>
+      </p>
+
+    </div>
+  </main>
+
+  <script src="/js/app.js"></script>
+  <script>
+    async function handleRegister(event) {
+      event.preventDefault();
+      const name = document.getElementById("reg-name").value.trim();
+      const email = document.getElementById("reg-email").value.trim();
+      const password = document.getElementById("reg-password").value;
+      const role = document.getElementById("reg-role").value;
+
+      const btn = document.getElementById("btn-register");
+      btn.disabled = true;
+      btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i><span>Creating Account...</span>`;
+
+      try {
+        const res = await registerAccount(name, email, password, role);
+        showToast("Registration successful! Welcome to CivicFix.", "success");
+        setTimeout(() => {
+          if (role === "admin") {
+            window.location.href = "/admin.html";
+          } else {
+            window.location.href = "/report.html";
+          }
+        }, 800);
+      } catch (err) {
+        showToast(err.message, "danger");
+        btn.disabled = false;
+        btn.innerHTML = `<i class="fa-solid fa-user-check"></i><span>Register Account</span>`;
+      }
+    }
+  </script>
+</body>
+</html>

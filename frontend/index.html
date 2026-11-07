@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CivicFix | AI-Powered Municipal Infrastructure Failure Management</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+  <!-- Navbar -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+          <i class="fa-solid fa-road text-lg"></i>
+        </div>
+        <div>
+          <span class="font-bold text-xl text-slate-900 tracking-tight">Civic<span class="text-blue-600">Fix</span></span>
+          <span class="hidden sm:inline-block ml-2 px-2 py-0.5 text-xs font-semibold bg-blue-50 text-blue-700 rounded-full border border-blue-200">AI Municipal Hub</span>
+        </div>
+      </div>
+      <nav class="flex items-center space-x-1 sm:space-x-3">
+        <a href="/" class="px-3 py-2 text-sm font-semibold text-blue-600 rounded-lg bg-blue-50">Home</a>
+        <a href="/report.html" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg hover:bg-slate-100">Report Issue</a>
+        <a href="/dashboard.html" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg hover:bg-slate-100">Citizen Tracker</a>
+        <a href="/admin.html" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg hover:bg-slate-100">Municipal Admin</a>
+        <a href="/research.html" class="px-3 py-2 text-sm font-medium text-slate-600 hover:text-blue-600 rounded-lg hover:bg-slate-100">ML Research</a>
+        <div id="auth-nav-container" class="ml-1 sm:ml-3"></div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="gradient-header text-white py-16 sm:py-24 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-blue-500/30 border border-blue-400/40 text-blue-100 text-xs font-medium backdrop-blur-sm">
+            <i class="fa-solid fa-brain"></i>
+            <span>Powered by Multi-Architecture Transfer Learning (MobileNetV2 / CNN)</span>
+          </div>
+          <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+            Intelligent Infrastructure Defect Detection & Autonomous Governance
+          </h1>
+          <p class="text-base sm:text-lg text-blue-100 font-normal leading-relaxed max-w-2xl">
+            CivicFix combines state-of-the-art computer vision with municipal crowd-sourcing. Upload a photograph of road damage, pipeline bursts, broken streetlights, or waste—our calibrated deep learning model detects the defect, assesses urgency, and alerts municipal maintenance in real-time.
+          </p>
+          <div class="flex flex-wrap gap-4 pt-4">
+            <a href="/report.html" class="inline-flex items-center space-x-2 px-6 py-3.5 rounded-xl bg-white text-blue-700 font-bold text-sm shadow-lg hover:bg-blue-50 hover:shadow-xl transition-all">
+              <i class="fa-solid fa-camera"></i>
+              <span>Report an Issue Now</span>
+            </a>
+            <a href="/research.html" class="inline-flex items-center space-x-2 px-6 py-3.5 rounded-xl bg-blue-700/60 border border-blue-300/30 text-white font-semibold text-sm hover:bg-blue-700 transition-all">
+              <i class="fa-solid fa-chart-line"></i>
+              <span>View CNN Research & Benchmarks</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl shadow-2xl space-y-5">
+            <h3 class="text-lg font-bold text-white flex items-center justify-between">
+              <span>Live Municipal Metrics</span>
+              <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            </h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="bg-white/10 p-4 rounded-xl border border-white/10">
+                <span class="block text-2xl font-bold text-white" id="stat-total">--</span>
+                <span class="text-xs text-blue-200 uppercase font-semibold">Total Complaints</span>
+              </div>
+              <div class="bg-white/10 p-4 rounded-xl border border-white/10">
+                <span class="block text-2xl font-bold text-amber-300" id="stat-pending">--</span>
+                <span class="text-xs text-blue-200 uppercase font-semibold">Pending Review</span>
+              </div>
+              <div class="bg-white/10 p-4 rounded-xl border border-white/10">
+                <span class="block text-2xl font-bold text-emerald-300" id="stat-resolved">--</span>
+                <span class="text-xs text-blue-200 uppercase font-semibold">Resolved Defect</span>
+              </div>
+              <div class="bg-white/10 p-4 rounded-xl border border-white/10">
+                <span class="block text-2xl font-bold text-blue-200" id="stat-rate">--%</span>
+                <span class="text-xs text-blue-200 uppercase font-semibold">Resolution Rate</span>
+              </div>
+            </div>
+            <div class="pt-2 text-xs text-blue-200 border-t border-white/10 flex items-center justify-between">
+              <span>Primary Engine: <b id="stat-model">MobileNetV2</b></span>
+              <span>Classes: <b>7 Categories</b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 Supported Defect Classes -->
+  <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-12 space-y-3">
+      <span class="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full">Automated Multi-Class Classification</span>
+      <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">7 Municipal Infrastructure Defect Classes</h2>
+      <p class="text-slate-600 text-sm">
+        Our model was specifically calibrated on verified urban municipal benchmark datasets to eliminate false positives and distinguish physical structural failures from benign conditions.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Pothole -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5 card-hover shadow-sm space-y-3">
+        <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center font-bold">
+          <i class="fa-solid fa-circle-dot"></i>
+        </div>
+        <h4 class="font-bold text-slate-900">1. Potholes</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">Depressions and craters in asphalt bitumen posing acute vehicular hazard. Dispatches P1 road patching crew.</p>
+        <span class="inline-block text-[11px] font-semibold text-red-700 bg-red-50 px-2 py-0.5 rounded">Priority: P1 High</span>
+      </div>
+
+      <!-- Crack -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5 card-hover shadow-sm space-y-3">
+        <div class="w-10 h-10 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+          <i class="fa-solid fa-code-fork"></i>
+        </div>
+        <h4 class="font-bold text-slate-900">2. Road Cracks</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">Transverse, longitudinal, and fatigue alligator fractures requiring preventive asphalt sealant maintenance.</p>
+        <span class="inline-block text-[11px] font-semibold text-amber-700 bg-amber-50 px-2 py-0.5 rounded">Priority: P3 Routine</span>
+      </div>
+
+      <!-- Manhole -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5 card-hover shadow-sm space-y-3">
+        <div class="w-10 h-10 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
+          <i class="fa-solid fa-circle-notch"></i>
+        </div>
+        <h4 class="font-bold text-slate-900">3. Damaged Manhole</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">Displaced, sunken, or shattered cast-iron utility and stormwater lids presenting critical pedestrian fall hazards.</p>
+        <span class="inline-block text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">Priority: P1 Urgent</span>
+      </div>
+
+      <!-- Garbage -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5 card-hover shadow-sm space-y-3">
+        <div class="w-10 h-10 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
+          <i class="fa-solid fa-trash-can"></i>
+        </div>
+        <h4 class="font-bold text-slate-900">4. Roadside Garbage</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">Illegal solid waste dumping, overflowing public receptacles, and sidewalk litter obstructing drainage.</p>
+        <span class="inline-block text-[11px] font-semibold text-purple-700 bg-purple-50 px-2 py-0.5 rounded">Priority: P3 Medium</span>
+      </div>
+
+      <!-- Streetlight -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5 card-hover shadow-sm space-y-3">
+        <div class="w-10 h-10 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center font-bold">
+          <i class="fa-solid fa-lightbulb"></i>
+        </div>
+        <h4 class="font-bold text-slate-900">5. Broken Streetlight</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">Physically fractured or leaning poles, shattered luminaire casings, and hazardous exposed electrical wiring.</p>
+        <span class="inline-block text-[11px] font-semibold text-orange-700 bg-orange-50 px-2 py-0.5 rounded">Priority: P2 High</span>
+      </div>
+
+      <!-- Pipeline Leakage -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5 card-hover shadow-sm space-y-3">
+        <div class="w-10 h-10 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center font-bold">
+          <i class="fa-solid fa-faucet-drip"></i>
+        </div>
+        <h4 class="font-bold text-slate-900">6. Pipeline Leakage</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">Surface water main bursts, road sub-base pooling, and joint seepage causing foundation erosion.</p>
+        <span class="inline-block text-[11px] font-semibold text-sky-700 bg-sky-50 px-2 py-0.5 rounded">Priority: P1 Critical</span>
+      </div>
+
+      <!-- Normal Road -->
+      <div class="bg-white rounded-xl border border-slate-200 p-5 card-hover shadow-sm space-y-3">
+        <div class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h4 class="font-bold text-slate-900">7. Normal Pavement</h4>
+        <p class="text-xs text-slate-600 leading-relaxed">Clean, undamaged asphalt and concrete road surface meeting municipal safety criteria.</p>
+        <span class="inline-block text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded">Priority: P4 Safe</span>
+      </div>
+
+      <!-- Quick Action Card -->
+      <div class="bg-blue-600 text-white rounded-xl p-5 card-hover shadow-md flex flex-col justify-between">
+        <div class="space-y-2">
+          <span class="text-xs uppercase font-bold text-blue-200">Get Involved</span>
+          <h4 class="font-bold text-white text-lg">Spot an issue in your city?</h4>
+          <p class="text-xs text-blue-100">Take a photo and upload it. Our AI identifies the category and notifies municipal dispatch.</p>
+        </div>
+        <a href="/report.html" class="mt-4 inline-block text-center bg-white text-blue-600 font-bold text-xs py-2.5 px-4 rounded-lg shadow hover:bg-blue-50 transition-all">
+          Upload Photo Now &rarr;
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Flow -->
+  <section class="bg-slate-100/70 border-t border-b border-slate-200 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-2xl mx-auto mb-12 space-y-2">
+        <h3 class="text-2xl font-bold text-slate-900">How CivicFix Operates</h3>
+        <p class="text-slate-600 text-sm">Four seamless steps from citizen capture to municipal road repair</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div class="text-center space-y-3">
+          <div class="w-12 h-12 rounded-full bg-blue-600 text-white font-extrabold text-lg flex items-center justify-center mx-auto shadow-md">1</div>
+          <h4 class="font-bold text-slate-800">1. Citizen Snapshot</h4>
+          <p class="text-xs text-slate-600">Citizen spots infrastructure damage and uploads a photo with GPS location.</p>
+        </div>
+        <div class="text-center space-y-3">
+          <div class="w-12 h-12 rounded-full bg-blue-600 text-white font-extrabold text-lg flex items-center justify-center mx-auto shadow-md">2</div>
+          <h4 class="font-bold text-slate-800">2. Deep AI Inference</h4>
+          <p class="text-xs text-slate-600">MobileNetV2 CNN evaluates the photo across 7 classes with calibrated confidence.</p>
+        </div>
+        <div class="text-center space-y-3">
+          <div class="w-12 h-12 rounded-full bg-blue-600 text-white font-extrabold text-lg flex items-center justify-center mx-auto shadow-md">3</div>
+          <h4 class="font-bold text-slate-800">3. Priority SLA Allocation</h4>
+          <p class="text-xs text-slate-600">The system assigns remediation SLA (e.g. 12h for open manholes, 24h for potholes).</p>
+        </div>
+        <div class="text-center space-y-3">
+          <div class="w-12 h-12 rounded-full bg-emerald-600 text-white font-extrabold text-lg flex items-center justify-center mx-auto shadow-md">4</div>
+          <h4 class="font-bold text-slate-800">4. Municipal Resolution</h4>
+          <p class="text-xs text-slate-600">Public works crew repairs the defect and marks the issue resolved on the admin board.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 mt-auto py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 space-y-4 sm:space-y-0">
+      <div>
+        <b>CivicFix</b> &copy; 2026. Academic Major Project & Municipal Infrastructure Platform.
+      </div>
+      <div class="flex space-x-6">
+        <a href="/research.html" class="hover:text-blue-600">Research Paper</a>
+        <a href="/dashboard.html" class="hover:text-blue-600">Citizen Complaints</a>
+        <a href="/admin.html" class="hover:text-blue-600">Admin Dashboard</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/js/app.js"></script>
+  <script>
+    // Load live metrics
+    fetchStats().then(data => {
+      if (data) {
+        document.getElementById('stat-total').innerText = data.total;
+        document.getElementById('stat-pending').innerText = data.pending;
+        document.getElementById('stat-resolved').innerText = data.resolved;
+        document.getElementById('stat-rate').innerText = data.resolution_rate + '%';
+        if (data.model_in_service) {
+          document.getElementById('stat-model').innerText = data.model_in_service;
+        }
+      }
+    });
+  </script>
+</body>
+</html>

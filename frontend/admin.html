@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Municipal Authority Admin Portal | CivicFix</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+  <!-- Navbar -->
+  <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md">
+          <i class="fa-solid fa-building-columns text-base"></i>
+        </div>
+        <div>
+          <span class="font-bold text-lg tracking-tight">Civic<span class="text-blue-400">Fix</span></span>
+          <span class="ml-2 px-2 py-0.5 text-[10px] uppercase font-extrabold bg-blue-900/60 text-blue-300 rounded border border-blue-700">Municipal Admin</span>
+        </div>
+      </div>
+      <nav class="flex items-center space-x-2 sm:space-x-4">
+        <a href="/" class="text-xs font-medium text-slate-300 hover:text-white">Public Portal</a>
+        <a href="/dashboard.html" class="text-xs font-medium text-slate-300 hover:text-white">Citizen View</a>
+        <a href="/research.html" class="text-xs font-medium text-slate-300 hover:text-white">ML Metrics</a>
+        <div id="auth-nav-container"></div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 space-y-8">
+    
+    <!-- KPI Analytics Cards -->
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Ingested</span>
+        <div class="flex items-baseline justify-between">
+          <span class="text-2xl sm:text-3xl font-extrabold text-slate-900" id="kpi-total">--</span>
+          <i class="fa-solid fa-list-check text-blue-600"></i>
+        </div>
+      </div>
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <span class="text-[11px] font-bold text-amber-500 uppercase tracking-wider">Pending Action</span>
+        <div class="flex items-baseline justify-between">
+          <span class="text-2xl sm:text-3xl font-extrabold text-amber-600" id="kpi-pending">--</span>
+          <i class="fa-solid fa-clock text-amber-500"></i>
+        </div>
+      </div>
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <span class="text-[11px] font-bold text-sky-500 uppercase tracking-wider">Crew Dispatched</span>
+        <div class="flex items-baseline justify-between">
+          <span class="text-2xl sm:text-3xl font-extrabold text-sky-600" id="kpi-progress">--</span>
+          <i class="fa-solid fa-truck-fast text-sky-500"></i>
+        </div>
+      </div>
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2">
+        <span class="text-[11px] font-bold text-emerald-500 uppercase tracking-wider">Closed & Resolved</span>
+        <div class="flex items-baseline justify-between">
+          <span class="text-2xl sm:text-3xl font-extrabold text-emerald-600" id="kpi-resolved">--</span>
+          <i class="fa-solid fa-circle-check text-emerald-500"></i>
+        </div>
+      </div>
+      <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-2 col-span-2 lg:col-span-1">
+        <span class="text-[11px] font-bold text-purple-500 uppercase tracking-wider">Resolution Rate</span>
+        <div class="flex items-baseline justify-between">
+          <span class="text-2xl sm:text-3xl font-extrabold text-purple-600" id="kpi-rate">--%</span>
+          <i class="fa-solid fa-chart-pie text-purple-500"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Management Table Section -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-4 p-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900">Municipal Complaint Resolution Queue</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Review AI inference predictions, override classifications, and assign status updates.</p>
+        </div>
+        <div class="flex items-center space-x-3 w-full sm:w-auto">
+          <select id="admin-category-filter" onchange="loadAdminData()" class="px-3 py-1.5 text-xs border border-slate-200 rounded-lg bg-white focus:outline-none">
+            <option value="all">All Categories</option>
+            <option value="pothole">Pothole</option>
+            <option value="pipeline_leakage">Pipeline Leakage</option>
+            <option value="broken_streetlight">Broken Streetlight</option>
+            <option value="manhole">Damaged Manhole</option>
+            <option value="garbage">Garbage</option>
+            <option value="crack">Road Crack</option>
+            <option value="normal">Normal</option>
+          </select>
+          <select id="admin-status-filter" onchange="loadAdminData()" class="px-3 py-1.5 text-xs border border-slate-200 rounded-lg bg-white focus:outline-none">
+            <option value="all">All Statuses</option>
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Resolved">Resolved</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Data Table -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-slate-200 text-[11px] uppercase tracking-wider text-slate-400 font-bold bg-slate-50/50">
+              <th class="py-3 px-4">Issue Details</th>
+              <th class="py-3 px-4">AI Prediction</th>
+              <th class="py-3 px-4">SLA Priority</th>
+              <th class="py-3 px-4">Citizen / Date</th>
+              <th class="py-3 px-4">Status Action</th>
+            </tr>
+          </thead>
+          <tbody id="admin-table-body" class="divide-y divide-slate-100 text-xs">
+            <tr>
+              <td colspan="5" class="py-8 text-center text-slate-400">Loading complaint table...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/app.js"></script>
+  <script>
+    async function loadStats() {
+      const stats = await fetchStats();
+      if (stats) {
+        document.getElementById('kpi-total').innerText = stats.total;
+        document.getElementById('kpi-pending').innerText = stats.pending;
+        document.getElementById('kpi-progress').innerText = stats.in_progress;
+        document.getElementById('kpi-resolved').innerText = stats.resolved;
+        document.getElementById('kpi-rate').innerText = stats.resolution_rate + '%';
+      }
+    }
+
+    async function loadAdminData() {
+      const cat = document.getElementById('admin-category-filter').value;
+      const status = document.getElementById('admin-status-filter').value;
+
+      const data = await fetchComplaints({ category: cat, status: status });
+      const tbody = document.getElementById('admin-table-body');
+
+      if (!data.complaints || data.complaints.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-slate-400">No records found matching criteria.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = data.complaints.map(c => {
+        const catBadge = CATEGORY_BADGES[c.category] || "badge-normal";
+        const catName = CATEGORY_NAMES[c.category] || c.category;
+        const confPct = Math.round(c.confidence * 100);
+
+        return `
+          <tr class="hover:bg-slate-50/70 transition-colors">
+            <td class="py-3.5 px-4">
+              <div class="flex items-center space-x-3">
+                <img src="/uploads/${c.image_filename}" class="w-12 h-12 object-cover rounded-lg border border-slate-200 shadow-sm flex-shrink-0">
+                <div class="space-y-0.5">
+                  <div class="font-bold text-slate-900">${c.title}</div>
+                  <div class="text-[11px] text-slate-400 flex items-center space-x-1 truncate max-w-xs">
+                    <i class="fa-solid fa-location-dot text-slate-300"></i>
+                    <span>${c.address || "Location unavailable"}</span>
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <td class="py-3.5 px-4 whitespace-nowrap">
+              <div class="space-y-1">
+                <span class="inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full ${catBadge}">
+                  ${catName}
+                </span>
+                <div class="text-[10px] text-slate-400">Confidence: <b class="text-slate-700">${confPct}%</b></div>
+              </div>
+            </td>
+
+            <td class="py-3.5 px-4 whitespace-nowrap">
+              <span class="font-semibold text-slate-700">${c.priority}</span>
+              <p class="text-[10px] text-slate-400 max-w-[180px] truncate">${c.recommendation || ""}</p>
+            </td>
+
+            <td class="py-3.5 px-4 whitespace-nowrap">
+              <div class="font-medium text-slate-800">${c.user_name}</div>
+              <div class="text-[10px] text-slate-400">${c.created_at.split(' ')[0]}</div>
+            </td>
+
+            <td class="py-3.5 px-4 whitespace-nowrap">
+              <div class="flex items-center space-x-2">
+                <select onchange="handleStatusChange(${c.id}, this.value)" class="text-xs px-2.5 py-1 rounded-lg border border-slate-200 bg-white font-medium focus:outline-none">
+                  <option value="Pending" ${c.status === 'Pending' ? 'selected' : ''}>Pending</option>
+                  <option value="In Progress" ${c.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                  <option value="Resolved" ${c.status === 'Resolved' ? 'selected' : ''}>Resolved</option>
+                </select>
+                ${c.status !== 'Resolved' ? `
+                  <button onclick="handleStatusChange(${c.id}, 'Resolved')" title="Quick Resolve" class="p-1.5 text-xs text-emerald-600 hover:bg-emerald-50 rounded-lg">
+                    <i class="fa-solid fa-check"></i>
+                  </button>
+                ` : ''}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    async function handleStatusChange(id, newStatus) {
+      try {
+        await updateStatus(id, newStatus);
+        showToast(`Complaint #${id} updated to ${newStatus}`, "success");
+        loadStats();
+        loadAdminData();
+      } catch (err) {
+        showToast(err.message, "danger");
+      }
+    }
+
+    // Init
+    loadStats();
+    loadAdminData();
+  </script>
+</body>
+</html>

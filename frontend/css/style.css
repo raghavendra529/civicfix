@@ -1,0 +1,60 @@
+/* CivicFix Modern Design System */
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --secondary: #0f172a;
+  --accent: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --surface: #ffffff;
+  --background: #f8fafc;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.gradient-header {
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%);
+}
+
+.card-hover {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -10px rgba(15, 23, 42, 0.15);
+}
+
+.badge-pothole { background-color: #fee2e2; color: #991b1b; }
+.badge-crack { background-color: #fef3c7; color: #92400e; }
+.badge-manhole { background-color: #e0e7ff; color: #3730a3; }
+.badge-garbage { background-color: #f3e8ff; color: #6b21a8; }
+.badge-broken_streetlight { background-color: #ffedd5; color: #9a3412; }
+.badge-pipeline_leakage { background-color: #e0f2fe; color: #075985; }
+.badge-normal { background-color: #dcfce7; color: #166534; }
+
+.status-pending { background-color: #fef3c7; color: #b45309; }
+.status-progress { background-color: #e0f2fe; color: #0369a1; }
+.status-resolved { background-color: #dcfce7; color: #15803d; }
+
+.dropzone {
+  border: 2px dashed #cbd5e1;
+  transition: all 0.2s ease;
+}
+
+.dropzone.dragover {
+  border-color: #2563eb;
+  background-color: #eff6ff;
+}

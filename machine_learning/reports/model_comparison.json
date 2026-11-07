@@ -1,0 +1,35 @@
+[
+  {
+    "model": "Custom CNN",
+    "type": "Baseline (4 Conv Blocks)",
+    "accuracy": 0.842,
+    "macro_precision": 0.836,
+    "macro_recall": 0.831,
+    "macro_f1": 0.833,
+    "latency_ms": 14.2,
+    "params_millions": 2.4,
+    "selected_as_best": false
+  },
+  {
+    "model": "MobileNetV2",
+    "type": "Pretrained ImageNet + Fine-Tuning",
+    "accuracy": 0.946,
+    "macro_precision": 0.942,
+    "macro_recall": 0.944,
+    "macro_f1": 0.943,
+    "latency_ms": 18.5,
+    "params_millions": 3.5,
+    "selected_as_best": true
+  },
+  {
+    "model": "EfficientNetB0",
+    "type": "Compound Scaling Pretrained",
+    "accuracy": 0.928,
+    "macro_precision": 0.921,
+    "macro_recall": 0.925,
+    "macro_f1": 0.923,
+    "latency_ms": 28.1,
+    "params_millions": 5.3,
+    "selected_as_best": false
+  }
+]
